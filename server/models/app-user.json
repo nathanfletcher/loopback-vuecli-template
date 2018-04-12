@@ -1,0 +1,24 @@
+{
+  "name": "AppUser",
+  "plural": "AppUsers",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "note": {
+      "type": "string"
+    },
+    "phonenumber": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
