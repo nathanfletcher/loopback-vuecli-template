@@ -53,7 +53,7 @@
                     if(response.status == 200){
                         console.log(response)
                         this.$store.commit('setToken',response.data.id);
-                        this.$store.commit('setProfile',response);
+                        this.$store.commit('setProfile',response.data);
                         this.$store.commit('setHeaders',{
                             accept:'application/json',
                             authorization:`${response.data.id}`

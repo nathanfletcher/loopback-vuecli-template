@@ -5,45 +5,36 @@
     <button @click="showCreateUserDialogue" class="mdl-button mdl-js-button mdl-button--fab dialog-button">
       <i class="material-icons">add</i>
     </button>
-
     <!-- Users Table -->
     <table id="usersTable" class="mdl-data-table mdl-js-data-table ">
       <thead>
         <tr>
           <th class="mdl-data-table__cell--non-numeric">Username</th>
           <th>Phone Number</th>
+          <th>Email</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric">zcrylic (Transparent)</td>
-          <td>25</td>
+        <tr v-for="(user,i) in users" :key="user.id">
+          <td class="mdl-data-table__cell--non-numeric">{{user.name}}</td>
+          <td>{{user.phonenumber}}</td>
+          <td>{{user.email}}</td>
           <td>
-            <!-- Right aligned menu below button -->
-            <button id="demo-menu-lower-right"
-                    class="mdl-button mdl-js-button ">
-              <!--<i class="material-icons">more_vert</i>--> Action
-            </button>
-
-            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="demo-menu-lower-right">
-              <li class="mdl-menu__item">Update User</li>
-              <li class="mdl-menu__item">Delete User</li>
-              <li disabled class="mdl-menu__item">Reset Password</li>
-              <li class="mdl-menu__item">Yet Another Action</li>
-            </ul>
+              <!-- Right aligned menu below button -->
+              <button id="demo-menu-lower-right"
+                      class="mdl-button mdl-js-button ">
+                <!--<i class="material-icons">more_vert</i>--> Action
+              </button>
+  
+              <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                  for="demo-menu-lower-right">
+                <li class="mdl-menu__item">Update User</li>
+                <li class="mdl-menu__item">Delete User</li>
+                <li disabled class="mdl-menu__item">Reset Password</li>
+                <li class="mdl-menu__item">Yet Another Action</li>
+              </ul>
           </td>
-        </tr>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-          <td>50</td>
-          <td>$1.25</td>
-        </tr>
-        <tr>
-          <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-          <td>10</td>
-          <td>$2.35</td>
         </tr>
       </tbody>
     </table>
@@ -65,6 +56,37 @@
     </dialog>
 
 
+    <!-- Create User Dialogue -->
+    <dialog id="loginDialog" class="mdl-dialog">
+        <h3 class="mdl-dialog__title">You must login to continue</h3>
+        <div class="mdl-dialog__content">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input
+                    id="email"
+                    class="mdl-textfield__input"
+                    type="text"
+                    v-model="email">
+                <label class="mdl-textfield__label" for="email">Email</label>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input
+                    id="pass"
+                    class="mdl-textfield__input"
+                    type="password"
+                    v-model="password">
+                <label class="mdl-textfield__label" for="pass">Password</label>
+            </div>
+        </div>
+        <div class="mdl-dialog__actions">
+          <!--<button type="button" class="mdl-button closeButton" @click="closeLoginDialogue">Close</button>-->
+          <!-- <button type="button" class="mdl-button" disabled>Disabled action</button> -->
+          <button type="button" class="mdl-button" @click=""  >Sign Up</button>
+          <button type="button" class="mdl-button" @click=""  >Login</button>
+        </div>
+      </dialog>
+
+
   </div>
   
 </template>
@@ -76,24 +98,18 @@ import {link} from '../helpers/http-common.js';
 export default {
   name:'Users',
   data(){
-    return{
-      users:[]
-    }
+      return {
+        value:'PPP',
+        users:[]
+      }
   },
   created: function(){
     let dialogButton = document.querySelector('.dialog-button');
     let dialog = document.querySelector('#dialog');
+    let loginDialog = document.querySelector('#loginDialog')
     console.log('getting users')
     //Get All Users
-    
-    link.get(`/AppUsers`)
-    .then(response => {
-      // JSON responses are automatically parsed.
-      this.posts = response.data
-    })
-    .catch(e => {
-      this.errors.push(e)
-    })
+    this.getAllUsers();
     
   },
   methods:{
@@ -130,11 +146,34 @@ export default {
           this.errors.push(e)
         })
       },
+      showLoginDialogue(){
+        loginDialog.showModal();
+      },
+      closeLoginDialogue(){
+        loginDialog.close();
+      },
       showCreateUserDialogue(){
         dialog.showModal();
       },
       closeCreateUserDialogue(){
         dialog.close();
+      },
+      getLoggedInUser(){
+        console.log(`getting logged in user`)
+        // console.log(JSON.stringify(this.$store.getters.getProfile))
+        return this.$store.getters.getProfile;
+      },
+      getAllUsers(){
+        let user = this.getLoggedInUser()
+        console.log(user)
+        link.get(`/AppUsers?access_token=${user.id}`)
+        .then(response =>{
+          console.log(JSON.stringify(response.data))
+          return this.users = response.data
+        })
+        .catch(e => {
+          this.showLoginDialogue()
+        })
       }
   }
 }
