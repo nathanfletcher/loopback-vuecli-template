@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" @click="login">
                 Sign In
                 </a>
             </div>
@@ -34,13 +34,46 @@
 </template>
 
 <script>
+    import {link} from '../helpers/http-common.js';
+
     export default{
         data () {
             return {
-            email: null,
-            password: null
+            email: '',
+            password: ''
             }
         },
+        methods:{
+            login: function(i){
+                link.post(`/AppUsers/login`,{
+                    username: this.email,
+                    password: this.password,
+                })
+                .then(response => {
+                    if(response.status == 200){
+                        console.log(response)
+                        this.$store.commit('setToken',response.data.id);
+                        this.$store.commit('setProfile',response);
+                        this.$store.commit('setHeaders',{
+                            accept:'application/json',
+                            authorization:`${response.data.id}`
+                        });
+                        console.log("hello world")
+                        console.log("Returned Data",JSON.stringify(this.$store.getters.getHeaders))
+                    }
+                    else{
+                       
+                    }
+                    return response
+                })
+                .catch(e => {
+                    //this.errors.push(e)
+                    console.log("THERE WAS A LOGIN ERROR")
+                    console.log(e.name)
+                    alert("your username or passoword is incorrect")
+                })
+            }
+        }
     }
 </script>
 

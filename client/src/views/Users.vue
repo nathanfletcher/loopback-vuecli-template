@@ -71,7 +71,7 @@
 
 
 <script>
-import axios from 'axios';
+import {link} from '../helpers/http-common.js';
 
 export default {
   name:'Users',
@@ -83,10 +83,10 @@ export default {
   created: function(){
     let dialogButton = document.querySelector('.dialog-button');
     let dialog = document.querySelector('#dialog');
-
+    console.log('getting users')
     //Get All Users
-    /*
-    axios.get(`http://localhost:3000/api/AppUsers`)
+    
+    link.get(`/AppUsers`)
     .then(response => {
       // JSON responses are automatically parsed.
       this.posts = response.data
@@ -94,13 +94,13 @@ export default {
     .catch(e => {
       this.errors.push(e)
     })
-    */
+    
   },
   methods:{
       createUser(){
         console.log('creating user')
         /*
-        axios.get(`http://localhost:3000/api/AppUsers`)
+        HTTP.get(`/AppUsers`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.posts = response.data
@@ -111,7 +111,7 @@ export default {
         */
       },
       deleteUser(){
-        axios.get(`http://localhost:3000/api/AppUser`)
+        HTTP.get(`/AppUsers`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.posts = response.data
@@ -121,7 +121,7 @@ export default {
         })
       },
       updateUser(){
-         axios.get(`http://localhost:3000/api/AppUser/`)
+         HTTP.get(`/AppUsers/`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.posts = response.data

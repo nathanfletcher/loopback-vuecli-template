@@ -5,6 +5,7 @@ import Homepage from './views/Homepage.vue'
 import Users from './views/Users.vue'
 import Notes from './views/Notes.vue'
 import Login from './views/Login.vue'
+import store from './store'
 
 Vue.use(VueRouter)
 
@@ -38,5 +39,6 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })

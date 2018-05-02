@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import {link} from '../helpers/http-common.js';
 
 export default {
   name:'Notes',
@@ -59,20 +59,22 @@ export default {
     }
   },
   created: function () {
-    axios.get(`http://localhost:3000/api/Notes`)
+    console.log('getting posts')
+    link.get(`/Notes`)
     .then(response => {
       // JSON responses are automatically parsed.
       this.posts = response.data
     })
     .catch(e => {
-      this.errors.push(e)
+      //this.errors.push(e)
+      console.log(e)
     })
   },
   methods:{
     deleteNote: function(i){
       //console.log('Delete function pressed '+i);
       let thePost = this.posts[i]
-      axios.delete(`http://localhost:3000/api/Notes/${thePost.id}`)
+      link.delete(`/Notes/${thePost.id}`)
       .then(response => {
         //remove from vue array
         this.posts.splice(i,1)
@@ -90,5 +92,3 @@ export default {
     margin-bottom: 1em
   }
 </style>
-
-<script>
