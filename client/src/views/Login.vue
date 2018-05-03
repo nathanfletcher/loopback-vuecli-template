@@ -11,7 +11,7 @@
                         class="mdl-textfield__input"
                         type="text"
                         v-model="email">
-                    <label class="mdl-textfield__label" for="email">Email</label>
+                    <label class="mdl-textfield__label" for="email">Email or Username</label>
                 </div>
 
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -44,10 +44,21 @@
             }
         },
         methods:{
+            validateEmail: (email)=>{
+                const pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                console.log(email)
+                if(email.match(pattern)){
+                    console.log(`found email`); 
+                    return email
+                } 
+                else
+                console.log(`nothing `)
+            },
             login: function(i){
                 link.post(`/AppUsers/login`,{
                     username: this.email,
-                    password: this.password,
+                    email: this.validateEmail(this.email),
+                    password: this.password
                 })
                 .then(response => {
                     if(response.status == 200){

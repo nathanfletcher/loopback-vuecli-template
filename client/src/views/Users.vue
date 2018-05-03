@@ -17,9 +17,9 @@
       </thead>
       <tbody>
         <tr v-for="(user,i) in users" :key="user.id">
-          <td class="mdl-data-table__cell--non-numeric">{{user.name}}</td>
-          <td>{{user.phonenumber}}</td>
-          <td>{{user.email}}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{user.name}}</td>
+            <td>{{user.phonenumber}}</td>
+            <td>{{user.email}}</td>
           <td>
               <!-- Right aligned menu below button -->
               <button id="demo-menu-lower-right"
@@ -41,12 +41,41 @@
 
     <!-- Create User Dialogue -->
     <dialog id="dialog" class="mdl-dialog">
-      <h3 class="mdl-dialog__title">MDL Dialog</h3>
+      <h3 class="mdl-dialog__title">Create New User</h3>
       <div class="mdl-dialog__content">
-        <p>
-          This is an example of the Material Design Lite dialog component.
-          Please use responsibly.
-        </p>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input
+                  id="email"
+                  class="mdl-textfield__input"
+                  type="text"
+                  v-model="email">
+              <label class="mdl-textfield__label" for="email">Email</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input
+                  id="username"
+                  class="mdl-textfield__input"
+                  type="text"
+                  v-model="username">
+              <label class="mdl-textfield__label" for="email">Username</label>
+          </div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input
+                  id="pass"
+                  class="mdl-textfield__input"
+                  type="password"
+                  v-model="password">
+              <label class="mdl-textfield__label" for="pass">Password</label>
+          </div>
+
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input
+                  id="confrimPass"
+                  class="mdl-textfield__input"
+                  type="password"
+                  v-model="confirm_password">
+              <label class="mdl-textfield__label" for="confirmPass">Confirm Password</label>
+          </div>
       </div>
       <div class="mdl-dialog__actions">
         <button type="button" class="mdl-button closeButton" @click="closeCreateUserDialogue">Close</button>
@@ -56,26 +85,26 @@
     </dialog>
 
 
-    <!-- Create User Dialogue -->
+    <!-- Login existing user Dialogue -->
     <dialog id="loginDialog" class="mdl-dialog">
         <h3 class="mdl-dialog__title">You must login to continue</h3>
         <div class="mdl-dialog__content">
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input
-                    id="email"
+                    id="loginEmail"
                     class="mdl-textfield__input"
                     type="text"
                     v-model="email">
-                <label class="mdl-textfield__label" for="email">Email</label>
+                <label class="mdl-textfield__label" for="loginEmail">Email</label>
             </div>
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <input
-                    id="pass"
+                    id="loginPass"
                     class="mdl-textfield__input"
                     type="password"
                     v-model="password">
-                <label class="mdl-textfield__label" for="pass">Password</label>
+                <label class="mdl-textfield__label" for="loginPass">Password</label>
             </div>
         </div>
         <div class="mdl-dialog__actions">
@@ -100,34 +129,53 @@ export default {
   data(){
       return {
         value:'PPP',
-        users:[]
+        users:[],
+        email:``,
+        username:``,
+        password:``,
+        confirm_password:``
       }
   },
   created: function(){
     let dialogButton = document.querySelector('.dialog-button');
     let dialog = document.querySelector('#dialog');
     let loginDialog = document.querySelector('#loginDialog')
-    console.log('getting users')
-    //Get All Users
+    console.log(`getting loca stuff`)
+    // console.log(`getting users: ${this.$store.token}`)
+    // Get All Users
+    // console.log(`Getting localstorage token: ${window.localStorage.getItem(`access_token`)}`)
     this.getAllUsers();
     
   },
   methods:{
+      validateEmail: (email)=>{
+          const pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          console.log(email)
+          if(email.match(pattern)){
+              console.log(`found email`); 
+              return email
+          } 
+          else
+          console.log(`nothing `)
+      },
       createUser(){
         console.log('creating user')
-        /*
-        HTTP.get(`/AppUsers`)
+        
+        link.post(`/AppUsers`,{username:this.username,email:this.email,password:this.password})
         .then(response => {
           // JSON responses are automatically parsed.
-          this.posts = response.data
+          console.log(`User created ${JSON.stringify(response.data)}`)
+          this.users.push(response.data)
+          this.closeCreateUserDialogue()
         })
         .catch(e => {
-          this.errors.push(e)
+          // this.errors.push(e)
+          console.log(e)
         })
-        */
+        
       },
       deleteUser(){
-        HTTP.get(`/AppUsers`)
+        link.get(`/AppUsers`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.posts = response.data
@@ -137,7 +185,7 @@ export default {
         })
       },
       updateUser(){
-         HTTP.get(`/AppUsers/`)
+         link.get(`/AppUsers/`)
         .then(response => {
           // JSON responses are automatically parsed.
           this.posts = response.data
@@ -160,7 +208,7 @@ export default {
       },
       getLoggedInUser(){
         console.log(`getting logged in user`)
-        // console.log(JSON.stringify(this.$store.getters.getProfile))
+        console.log(JSON.stringify(this.$store.getters.getProfile))
         return this.$store.getters.getProfile;
       },
       getAllUsers(){
