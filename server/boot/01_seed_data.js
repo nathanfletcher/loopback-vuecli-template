@@ -6,6 +6,8 @@
 const app = require('../../server/server')
 const User = app.models.AppUser
 const Note = app.models.Note
+const Role = app.models.Role;
+const RoleMapping = app.models.RoleMapping;
 
 //console.log(app.models.AppUser)
 
@@ -14,6 +16,10 @@ function createDefaultUsersAndNotes() {
 
   if (process.env.NODE_ENV !== 'production') {
     console.log('Dev or staging mode activated, creating seed data')
+
+    
+
+    /*
     User.findOrCreate({where: {id: 0}}, {
         username: 'Admin',
         email: 'admin@admin.com',
@@ -55,7 +61,7 @@ function createDefaultUsersAndNotes() {
       , function (err, users) {
         if (err) return console.log('%j', err)
       })
-
+      */
 
     // Create the admin role
     /* Role.create({
@@ -197,4 +203,58 @@ function createDefaultUsersAndNotes() {
 
 module.exports = async(app) => {
   await createDefaultUsersAndNotes();
+
+  User.create([
+    {username: 'Admin', email: 'admin@admin.com', password: 'secret',phonenumber: '0209708141', name: 'admin'},
+    {username: 'John', email: 'john@doe.com', password: 'secret',phonenumber: '0209708141', name: 'John'},
+    {username: 'Jane', email: 'jane@doe.com', password: 'secret',phonenumber: '0209708141', name: 'Jane'},
+    {username: 'Bob', email: 'bob@projects.com', password: 'secret',phonenumber: '0209708141', name:'Bob'}
+  ], function(err, users) {
+    if (err) return cb(err);
+
+    //create the admin role
+    Role.create({
+      name: 'admin'
+    }, function(err, role) {
+      if (err) cb(err);
+
+      //make bob an admin
+      role.principals.create({
+        principalType: RoleMapping.USER,
+        principalId: users[0].id
+      }, function(err, principal) {
+        //cb(err);
+      });
+
+    });
+
+    Role.create({
+      name: 'editor'
+    }, function(err, role) {
+      if (err) cb(err);
+
+      //make bob an admin
+      role.principals.create({
+        principalType: RoleMapping.USER,
+        principalId: users[1].id
+      }, function(err, principal) {
+        //cb(err);
+      });
+    });
+
+    Role.create({
+      name: 'guest'
+    }, function(err, role) {
+      if (err) cb(err);
+
+      //make bob an admin
+      role.principals.create({
+        principalType: RoleMapping.USER,
+        principalId: users[1].id
+      }, function(err, principal) {
+        //cb(err);
+      });
+    });
+
+  });
 }

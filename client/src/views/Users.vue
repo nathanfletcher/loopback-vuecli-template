@@ -21,21 +21,19 @@
             <td>{{user.phonenumber}}</td>
             <td>{{user.email}}</td>
           <td>
-              <!-- Right aligned menu below button -->
-              <button id="demo-menu-lower-right"
-                      class="mdl-button mdl-js-button ">
-                <!--<i class="material-icons">more_vert</i>--> Action
-              </button>
-  
-              <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                  for="demo-menu-lower-right">
-                <li class="mdl-menu__item">Update User</li>
-                <li class="mdl-menu__item">Delete User</li>
-                <li disabled class="mdl-menu__item">Reset Password</li>
-                <li class="mdl-menu__item">Yet Another Action</li>
-              </ul>
+              <span class="mdl-chip mdl-chip--contact" @click=deleteUser(i)>
+                  <span class="mdl-chip__contact mdl-color--red mdl-color-text--white">D</span>
+                  <span class="mdl-chip__text">Delete</span>
+              </span>
+
+              <span class="mdl-chip mdl-chip--contact" @click=updateUser(i)>
+                  <span class="mdl-chip__contact mdl-color--teal mdl-color-text--white">U</span>
+                  <span class="mdl-chip__text">Update</span>
+              </span>
           </td>
         </tr>
+
+
       </tbody>
     </table>
 
@@ -115,6 +113,27 @@
         </div>
       </dialog>
 
+      <!-- Update existing user Dialogue -->
+    <dialog id="loginDialog" class="mdl-dialog">
+        <h3 class="mdl-dialog__title">You must login to continue</h3>
+        <div class="mdl-dialog__content">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input
+                    id="loginPass"
+                    class="mdl-textfield__input"
+                    type="password"
+                    v-model="password">
+                <label class="mdl-textfield__label" for="loginPass">Password</label>
+            </div>
+        </div>
+        <div class="mdl-dialog__actions">
+          <!--<button type="button" class="mdl-button closeButton" @click="closeLoginDialogue">Close</button>-->
+          <!-- <button type="button" class="mdl-button" disabled>Disabled action</button> -->
+          <button type="button" class="mdl-button" @click=""  >Sign Up</button>
+          <button type="button" class="mdl-button" @click=""  >Login</button>
+        </div>
+      </dialog>
+
 
   </div>
   
@@ -174,15 +193,25 @@ export default {
         })
         
       },
-      deleteUser(){
-        link.get(`/AppUsers`)
+      deleteUser: function(i){
+        //console.log('Delete function pressed '+i);
+        /*
+        let thePost = this.users[i]
+        link.delete(`/Notes/${thePost.id}`)
         .then(response => {
-          // JSON responses are automatically parsed.
-          this.posts = response.data
+          //remove from vue array
+          this.users.splice(i,1)
         })
         .catch(e => {
           this.errors.push(e)
         })
+        */
+        let r = confirm(`Are you sure you want to delete the user ${this.users[i].email} ?`);
+        if (r == true) {
+            //remove from vue array
+            this.users.splice(i,1)
+        }
+       
       },
       updateUser(){
          link.get(`/AppUsers/`)

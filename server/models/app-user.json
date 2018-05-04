@@ -24,7 +24,22 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "accessType": "READ",
+      "permission": "ALLOW",
+      "property": "find"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "accessType": "EXECUTE",
       "permission": "ALLOW"
+    },
+    {
+      "model": 'order',
+      "property": 'find',
+      "accessType": '*',
+      "principalType": 'ROLE',
+      "principalId": '$authenticated',
+      "permission": 'DENY'
     }
   ],
   "methods": {}
