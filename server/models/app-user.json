@@ -21,25 +21,25 @@
   "relations": {},
   "acls": [
     {
+      "accessType": "READ",
       "principalType": "ROLE",
       "principalId": "$authenticated",
-      "accessType": "READ",
       "permission": "ALLOW",
       "property": "find"
     },
     {
+      "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "admin",
-      "accessType": "EXECUTE",
       "permission": "ALLOW"
     },
     {
-      "model": 'order',
-      "property": 'find',
-      "accessType": '*',
-      "principalType": 'ROLE',
-      "principalId": '$authenticated',
-      "permission": 'DENY'
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "DENY",
+      "property": "find",
+      "model": "order"
     }
   ],
   "methods": {}
