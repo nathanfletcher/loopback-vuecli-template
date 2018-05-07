@@ -34,13 +34,20 @@
       "permission": "ALLOW"
     },
     {
-      "accessType": "*",
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW",
+      "property": "create"
+    },
+    {
+      "accessType": "WRITE",
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "DENY",
-      "property": "find",
-      "model": "order"
-    }
+      "property": "create"
+    },
+    
   ],
   "methods": {}
 }
